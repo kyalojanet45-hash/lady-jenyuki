@@ -73,7 +73,7 @@ export default function BakerProfile({ params }: { params: Promise<{ id: string 
       if (response.ok) {
         alert('Order placed successfully!');
         // setShowOrderModal(false);
-        router.push(`https://paystack.com/buy/croissants-hlhwoc`);
+        router.push(`${baker?.paymentLink}`);
       } else {
         const data = await response.json();
         alert(data.error || 'Failed to place order');
