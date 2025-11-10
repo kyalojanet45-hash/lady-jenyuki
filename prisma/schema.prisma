@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  BAKER
+  ADMIN
+}
+
+enum BakerStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  password  String
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profile   Profile?
+  orders    Order[]
+}
+
+model Profile {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String        @unique @db.ObjectId
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName       String
+  lastName        String
+  bio             String?
+  phone           String?
+  photos          String[]
+  education       Education[]
+  bakerStatus     BakerStatus?
+  specialties     String[]
+  businessName    String?
+  businessAddress String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  ordersReceived  Order[]
+}
+
+model Education {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  profileId       String   @db.ObjectId
+  profile         Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  universityName  String
+  courseName      String
+  graduationYear  String
+  createdAt       DateTime @default(now())
+}
+
+model Order {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bakerId     String   @db.ObjectId
+  baker       Profile  @relation(fields: [bakerId], references: [id], onDelete: Cascade)
+  pastryType  String
+  quantity    Int
+  totalAmount Float
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
