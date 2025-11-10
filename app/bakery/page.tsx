@@ -1,26 +1,125 @@
 'use client';
 
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import BakerCard from '@/components/Bakery/BakerCard';
 import { bakers } from '@/data/bakersData';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+
+interface Baker {
+  id: string;
+  firstName: string;
+  lastName: string;
+  businessName?: string;
+  businessAddress?: string;
+  bio?: string;
+  phone?: string;
+  specialties: string[];
+  photos: string[];
+  user: {
+    email: string;
+  };
+  education: Array<{
+    universityName: string;
+    courseName: string;
+    graduationYear: string;
+  }>;
+}
 
 export default function BakeryHome() {
+    const { data: session } = useSession();
+    const [bakers, setBakers] = useState<Baker[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [selectedBaker, setSelectedBaker] = useState<Baker | null>(null);
+    const [showOrderModal, setShowOrderModal] = useState(false);
+    const [orderForm, setOrderForm] = useState({
+      pastryType: '',
+      quantity: 1,
+      totalAmount: 0,
+    });
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>('all');
-
-  const specialties = ['all', ...Array.from(new Set(bakers.map(b => b.specialty)))];
-
-  const filteredBakers = bakers.filter(baker => {
-    const matchesSearch = 
-      baker.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      baker.businessName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      baker.specialty.toLowerCase().includes(searchTerm.toLowerCase());
+  // const specialties = ['all', ...Array.from(new Set(bakers.map(b => b.specialty)))];
+  // const filteredBakers = bakers.filter(baker => {
+  //   const matchesSearch = 
+  //     baker.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     baker.businessName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     baker.specialty.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesSpecialty = 
-      selectedSpecialty === 'all' || baker.specialty === selectedSpecialty;
+  //   const matchesSpecialty = 
+  //     selectedSpecialty === 'all' || baker.specialty === selectedSpecialty;
 
-    return matchesSearch && matchesSpecialty;
-  });
+  //   return matchesSearch && matchesSpecialty;
+  // });
+  const filteredBakers = []
+    useEffect(() => {
+      fetchBakers();
+    }, []);
+  
+    const fetchBakers = async () => {
+      try {
+        const response = await fetch('/api/bakers');
+        const data = await response.json();
+        setBakers(data.bakers || []);
+      } catch (error) {
+        console.error('Error fetching bakers:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    const openOrderModal = (baker: Baker) => {
+      setSelectedBaker(baker);
+      setShowOrderModal(true);
+      setOrderForm({
+        pastryType: '',
+        quantity: 1,
+        totalAmount: 0,
+      });
+    };
+  
+    const handleOrderSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      
+      if (!session) {
+        alert('Please sign in to place an order');
+        return;
+      }
+  
+      try {
+        const response = await fetch('/api/orders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            bakerId: selectedBaker?.id,
+            pastryType: orderForm.pastryType,
+            quantity: orderForm.quantity,
+            totalAmount: orderForm.totalAmount,
+          }),
+        });
+  
+        if (response.ok) {
+          alert('Order placed successfully!');
+          setShowOrderModal(false);
+        } else {
+          const data = await response.json();
+          alert(data.error || 'Failed to place order');
+        }
+      } catch (error) {
+        console.error('Error placing order:', error);
+        alert('Failed to place order');
+      }
+    };
+  
+    if (loading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-xl">Loading bakers...</div>
+        </div>
+      );
+    }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
@@ -40,7 +139,7 @@ export default function BakeryHome() {
               </svg>
             </div>
             <h1 className="text-5xl md:text-6xl font-bold mb-4">
-              Artisan Bakery Marketplace
+              Lady Jenyuki
             </h1>
             <p className="text-xl md:text-2xl mb-2 text-amber-100">
               Discover Local Master Bakers & Their Creations
@@ -79,18 +178,18 @@ export default function BakeryHome() {
                 onChange={(e) => setSelectedSpecialty(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent text-gray-900"
               >
-                {specialties.map(specialty => (
+                {/* {specialties.map(specialty => (
                   <option key={specialty} value={specialty}>
                     {specialty === 'all' ? 'All Specialties' : specialty}
                   </option>
-                ))}
+                ))} */}
               </select>
             </div>
           </div>
 
           {/* Results Count */}
           <div className="mt-4 text-sm text-gray-600">
-            Showing <span className="font-semibold text-amber-600">{filteredBakers.length}</span> baker{filteredBakers.length !== 1 ? 's' : ''}
+          {/* Showing <span className="font-semibold text-amber-600">{filteredBakers.length}</span> baker{filteredBakers.length !== 1 ? 's' : ''} */}
           </div>
         </div>
       </div>
@@ -119,9 +218,9 @@ export default function BakeryHome() {
 
       {/* Bakers Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        {filteredBakers.length > 0 ? (
+        {bakers?.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredBakers.map(baker => (
+            {bakers?.map(baker => (
               <BakerCard key={baker.id} baker={baker} />
             ))}
           </div>

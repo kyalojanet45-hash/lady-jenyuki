@@ -75,7 +75,7 @@ export default function Home() {
         </div>
 
         {/* Two Main Features */}
-        <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-1 justify-center  max-w-6xl mx-auto">
           {/* Bakery Marketplace Card */}
           <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 hover:shadow-2xl transition-shadow">
             <div className="mb-8">
@@ -124,7 +124,7 @@ export default function Home() {
             </div>
 
             <Link
-              href="/bakers"
+              href="/bakery"
               className="inline-flex items-center justify-center w-full px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-amber-600 to-orange-600 rounded-lg hover:from-amber-700 hover:to-orange-700 focus:outline-none focus:ring-4 focus:ring-amber-300 transition-all transform hover:scale-105 shadow-lg"
             >
               Browse Bakers
@@ -145,7 +145,7 @@ export default function Home() {
           </div>
 
           {/* Profile Wizard Card */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 hover:shadow-2xl transition-shadow">
+          {/* <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 hover:shadow-2xl transition-shadow">
             <div className="mb-8">
               <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-100 rounded-full mb-4">
                 <svg
@@ -210,7 +210,7 @@ export default function Home() {
                 />
               </svg>
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
