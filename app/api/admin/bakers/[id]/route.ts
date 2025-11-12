@@ -2,13 +2,15 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { use, } from 'react';
 
 // Update baker status (approve/reject)
 export async function PATCH(
   request: Request,
-  //@ts-expect-error:fx
-  { params }
+ 
+  { params }:{ params: Promise<{ id: string }> }
 ) {
+  const  id =  (await params)?.id
   try {
     const session = await getServerSession(authOptions);
 
@@ -29,7 +31,7 @@ export async function PATCH(
     }
 
     const profile = await prisma.profile.update({
-      where: { id: params.id },
+      where: { id: id },
       data: { bakerStatus: status },
       include: {
         user: {
