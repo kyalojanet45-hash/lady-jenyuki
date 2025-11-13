@@ -17,6 +17,7 @@ export async function GET(
         lastName: true,
         bio: true,
         phone: true,
+        paymentLink: true,
         photos: true,
         specialties: true,
         businessName: true,
