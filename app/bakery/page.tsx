@@ -210,7 +210,7 @@ export default function BakeryHome() {
             <div className="text-gray-600">Average Rating</div>
           </div>
           <div className="bg-white rounded-xl shadow-md p-6 text-center">
-            <div className="text-3xl font-bold text-orange-600 mb-2">1000+</div>
+            <div className="text-3xl font-bold text-orange-600 mb-2">2+</div>
             <div className="text-gray-600">Happy Customers</div>
           </div>
         </div>
@@ -242,7 +242,7 @@ export default function BakeryHome() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Are You a Baker?</h2>
           <p className="text-xl mb-8 text-amber-50">Join our marketplace and showcase your creations to thousands of customers</p>
-          <button className="bg-white text-amber-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-amber-50 transition-colors shadow-lg">
+          <button as=""className="bg-white text-amber-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-amber-50 transition-colors shadow-lg">
             Become a Vendor
           </button>
         </div>

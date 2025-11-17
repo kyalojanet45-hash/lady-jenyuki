@@ -132,7 +132,7 @@ export default function BakerProfile({ params }: { params: Promise<{ id: string 
               <div className="flex-shrink-0">
                 <div className="relative">
                   <img
-                    // src={baker.photo}
+                      src={baker?.user?.email == "jeekmill45@gmail.com"?'/cake.jpeg':'/croissants.jpeg'}
                     // alt={baker.name}
                     className="w-48 h-48 rounded-2xl border-4 border-white shadow-xl object-cover"
                   />

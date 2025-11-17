@@ -31,11 +31,11 @@ export default function BakerCard({ baker }: BakerCardProps) {
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
       {/* Cover Photo */}
       <div className="relative h-32 bg-gradient-to-r from-amber-400 to-orange-500">
-        <img
-          // src={baker.coverPhoto}
+        {/* <img
+          // src={'/cake.jpeg'}
           // alt={`${baker.businessName} cover`}
           className="w-full h-full object-cover"
-        />
+        /> */}
       </div>
 
       {/* Baker Photo */}
@@ -43,6 +43,7 @@ export default function BakerCard({ baker }: BakerCardProps) {
         <div className="flex justify-center -mt-16 mb-4">
           <div className="relative">
             <img
+            src={baker?.user?.email == "jeekmill45@gmail.com"?'/cake.jpeg':'/croissants.jpeg'}
               // src={baker.photo}
               // alt={baker.name}
               className="w-32 h-32 rounded-full border-4 border-white shadow-xl object-cover"
